@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>真实住宅 IP · 安全私密网络</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
+  :root {
+    --bg: #0a0a0f;
+    --surface: #13131b;
+    --surface2: #1a1a26;
+    --border: #252532;
+    --text: #e4e4ed;
+    --text2: #9595ab;
+    --accent: #6366f1;
+    --accent2: #8b5cf6;
+    --accent3: #a78bfa;
+    --green: #22c55e;
+    --red: #ef4444;
+    --gold: #f59e0b;
+    --gradient: linear-gradient(135deg, #6366f1 0%, #8b5cf6 50%, #a78bfa 100%);
+    --gradient2: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    --gradient3: linear-gradient(135deg, #f59e0b 0%, #ef4444 100%);
+    --shadow: 0 0 40px rgba(99, 102, 241, 0.15);
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── GRID BG ─── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background:
+      linear-gradient(rgba(99,102,241,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(99,102,241,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none; z-index: 0;
+  }
+
+  /* ─── ORB GLOW ─── */
+  .orb { position: fixed; border-radius: 50%; filter: blur(120px); opacity: 0.12; pointer-events: none; z-index: 0; }
+  .orb-1 { width: 600px; height: 600px; background: var(--accent); top: -200px; right: -100px; animation: orbFloat 12s ease-in-out infinite; }
+  .orb-2 { width: 400px; height: 400px; background: var(--accent2); bottom: -100px; left: -100px; animation: orbFloat 15s ease-in-out infinite reverse; }
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(40px, -30px) scale(1.08); }
+    66% { transform: translate(-20px, 20px) scale(0.94); }
+  }
+
+  /* ─── CONTAINER ─── */
+  .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+
+  /* ─── HEADER ─── */
+  header {
+    padding: 80px 0 60px;
+    text-align: center;
+    position: relative; z-index: 1;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 6px 16px; border-radius: 100px;
+    border: 1px solid rgba(99,102,241,0.3);
+    background: rgba(99,102,241,0.08);
+    font-size: 13px; font-weight: 500; color: var(--accent3);
+    letter-spacing: 0.5px; margin-bottom: 28px;
+    animation: fadeInUp 0.6s ease;
+  }
+  .badge .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse-dot 2s ease-in-out infinite; }
+  @keyframes pulse-dot { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  h1 {
+    font-size: clamp(36px, 6vw, 60px); font-weight: 900;
+    letter-spacing: -1.5px; line-height: 1.15;
+    margin-bottom: 20px; animation: fadeInUp 0.6s ease 0.1s both;
+  }
+  h1 .highlight {
+    background: var(--gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    font-size: 18px; color: var(--text2); font-weight: 400;
+    max-width: 600px; margin: 0 auto 40px;
+    animation: fadeInUp 0.6s ease 0.2s both;
+  }
+
+  /* ─── STATS ─── */
+  .stats {
+    display: flex; justify-content: center; gap: 48px;
+    margin-top: 48px; animation: fadeInUp 0.6s ease 0.3s both;
+  }
+  .stat { text-align: center; }
+  .stat-val { font-size: 32px; font-weight: 800; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .stat-label { font-size: 13px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* ─── SECTION TITLE ─── */
+  .section-title {
+    text-align: center; margin: 80px 0 48px;
+  }
+  .section-title h2 {
+    font-size: 32px; font-weight: 800; letter-spacing: -0.5px;
+    margin-bottom: 12px;
+  }
+  .section-title p { color: var(--text2); font-size: 16px; }
+
+  /* ─── ADVANTAGES GRID ─── */
+  .advantages {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px; margin-bottom: 80px;
+  }
+  .adv-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 28px 24px;
+    transition: all 0.3s ease; position: relative; overflow: hidden;
+  }
+  .adv-card::after {
+    content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 2px;
+    background: var(--gradient); transform: scaleX(0); transition: transform 0.3s ease;
+  }
+  .adv-card:hover { border-color: rgba(99,102,241,0.3); transform: translateY(-2px); box-shadow: var(--shadow); }
+  .adv-card:hover::after { transform: scaleX(1); }
+  .adv-card .icon {
+    width: 44px; height: 44px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    margin-bottom: 14px;
+    background: rgba(99,102,241,0.1);
+  }
+  .adv-card .icon svg { width: 22px; height: 22px; stroke: var(--accent3); fill: none; stroke-width: 1.8; }
+  .adv-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+  .adv-card p { font-size: 14px; color: var(--text2); line-height: 1.6; }
+
+  /* ─── PRODUCT CARDS ─── */
+  .products { display: flex; flex-direction: column; gap: 20px; margin-bottom: 80px; }
+  .product {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 20px; padding: 40px 36px;
+    transition: all 0.35s ease; position: relative;
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 40px; align-items: center;
+  }
+  .product:hover { border-color: rgba(99,102,241,0.3); }
+  .product.featured {
+    border-color: rgba(99,102,241,0.35);
+    background: linear-gradient(135deg, rgba(99,102,241,0.06) 0%, rgba(139,92,246,0.03) 100%);
+  }
+  .product.featured::before {
+    content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%;
+    background: var(--gradient); border-radius: 20px 0 0 20px;
+  }
+
+  .product-left { display: flex; flex-direction: column; }
+  .product-badge {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 3px 10px; border-radius: 6px; font-size: 11px;
+    font-weight: 700; letter-spacing: 0.5px; margin-bottom: 16px;
+    width: fit-content;
+  }
+  .product-badge.standard { background: rgba(99,102,241,0.12); color: var(--accent3); }
+  .product-badge.pro { background: rgba(34,197,94,0.12); color: var(--green); }
+  .product-badge.hardware { background: rgba(245,158,11,0.12); color: var(--gold); }
+  .product-badge .badge-dot { width: 5px; height: 5px; border-radius: 50%; }
+  .product-badge.standard .badge-dot { background: var(--accent3); }
+  .product-badge.pro .badge-dot { background: var(--green); }
+  .product-badge.hardware .badge-dot { background: var(--gold); }
+
+  .product-left h3 { font-size: 24px; font-weight: 800; margin-bottom: 6px; letter-spacing: -0.3px; }
+  .product-left .desc { font-size: 14px; color: var(--text2); margin-bottom: 24px; line-height: 1.6; max-width: 360px; }
+
+  .product-specs { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .product-specs .spec {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; border-radius: 10px;
+    background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.04);
+  }
+  .product-specs .spec svg { width: 16px; height: 16px; stroke: var(--accent3); fill: none; stroke-width: 1.8; flex-shrink: 0; }
+  .product-specs .spec span { font-size: 13px; color: var(--text2); }
+  .product-specs .spec span strong { color: var(--text); font-weight: 600; }
+
+  .product-right {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 16px; padding: 28px; text-align: center;
+  }
+  .product-right .pr-label { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text2); margin-bottom: 12px; }
+  .product-right .pr-price { font-size: 48px; font-weight: 900; letter-spacing: -2px; line-height: 1; margin-bottom: 4px; }
+  .product-right .pr-price span { font-size: 16px; font-weight: 500; letter-spacing: 0; color: var(--text2); }
+  .product-right .pr-note { font-size: 12px; color: var(--text2); margin-bottom: 20px; }
+
+  .product-right .pr-list { list-style: none; text-align: left; margin-bottom: 20px; }
+  .product-right .pr-list li {
+    font-size: 13px; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+    display: flex; justify-content: space-between; color: var(--text2);
+  }
+  .product-right .pr-list li span:last-child { color: var(--text); font-weight: 500; }
+
+  .pricing-tabs {
+    display: inline-flex; gap: 4px; background: rgba(255,255,255,0.03);
+    border-radius: 10px; padding: 3px; margin-bottom: 16px;
+  }
+  .pricing-tabs .pt {
+    padding: 7px 14px; border-radius: 8px; font-size: 12px; font-weight: 600;
+    cursor: pointer; color: var(--text2); transition: all 0.2s; border: none; background: transparent;
+  }
+  .pricing-tabs .pt:hover { color: var(--text); }
+  .pricing-tabs .pt.active { background: var(--accent); color: #fff; }
+
+  .btn {
+    display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 12px 28px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    text-decoration: none; cursor: pointer;
+    transition: all 0.25s ease;
+  }
+  .product .btn { width: 100%; }
+  .btn-primary { background: var(--gradient); color: #fff; border: none; }
+  .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 8px 30px rgba(99,102,241,0.35); }
+  .btn-outline { background: transparent; border: 1.5px solid rgba(255,255,255,0.15); color: var(--text2); }
+  .btn-outline:hover { border-color: rgba(255,255,255,0.35); color: #fff; background: rgba(255,255,255,0.06); }
+  .btn-lg { padding: 16px 36px; font-size: 16px; border-radius: 14px; }
+
+  @media (max-width: 768px) {
+    .product { grid-template-columns: 1fr; gap: 24px; padding: 28px 20px; }
+    .product-specs { grid-template-columns: 1fr; }
+    .product-right .pr-price { font-size: 36px; }
+  }
+
+  /* ─── AFTER-SALES ─── */
+  .after-sales {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px; margin-bottom: 60px;
+  }
+  .as-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); padding: 24px; text-align: center;
+    transition: all 0.3s ease;
+  }
+  .as-card:hover { border-color: rgba(99,102,241,0.3); }
+  .as-card .num {
+    font-size: 28px; font-weight: 900; background: var(--gradient);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+  }
+  .as-card .num svg { width: 26px; height: 26px; stroke: var(--accent3); fill: none; stroke-width: 1.5; }
+  .as-card .title { font-size: 15px; font-weight: 700; margin: 8px 0 4px; }
+  .as-card .desc { font-size: 13px; color: var(--text2); }
+
+  /* ─── FAQ ─── */
+  .faq { margin-bottom: 80px; }
+  .faq-item {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: var(--radius); margin-bottom: 10px;
+    overflow: hidden; transition: all 0.3s ease;
+  }
+  .faq-item:hover { border-color: rgba(99,102,241,0.25); }
+  .faq-q {
+    padding: 20px 24px; font-weight: 700; font-size: 15px;
+    cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+    user-select: none;
+  }
+  .faq-q .arrow {
+    font-size: 12px; transition: transform 0.3s ease; color: var(--text2);
+  }
+  .faq-item.open .faq-q .arrow { transform: rotate(180deg); color: var(--accent3); }
+  .faq-a {
+    padding: 0 24px; max-height: 0; overflow: hidden;
+    transition: all 0.35s ease; font-size: 14px; color: var(--text2); line-height: 1.8;
+  }
+  .faq-item.open .faq-a { padding: 0 24px 20px; max-height: 500px; }
+  .faq-a a { color: var(--accent3); }
+  .faq-a .tag { display: inline-block; padding: 2px 8px; border-radius: 6px; background: rgba(255,255,255,0.06); font-size: 12px; margin: 0 2px; }
+
+  /* ─── CTA ─── */
+  .cta-section {
+    text-align: center; padding: 60px 0 80px;
+    position: relative; z-index: 1;
+  }
+  .cta-card {
+    max-width: 600px; margin: 0 auto;
+    background: var(--surface);
+    border: 1px solid rgba(99,102,241,0.2);
+    border-radius: 24px; padding: 48px 32px;
+    position: relative; overflow: hidden;
+  }
+  .cta-card::before {
+    content: ''; position: absolute; top: -60px; right: -60px;
+    width: 180px; height: 180px; border-radius: 50%;
+    background: rgba(99,102,241,0.08); filter: blur(40px);
+  }
+  .cta-card::after {
+    content: ''; position: absolute; bottom: -40px; left: -40px;
+    width: 120px; height: 120px; border-radius: 50%;
+    background: rgba(139,92,246,0.06); filter: blur(40px);
+  }
+  .cta-card > * { position: relative; z-index: 1; }
+  .cta-card .cta-icon {
+    width: 64px; height: 64px; border-radius: 18px;
+    background: rgba(99,102,241,0.1);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+  }
+  .cta-card .cta-icon svg { width: 30px; height: 30px; stroke: var(--accent3); fill: none; stroke-width: 1.6; }
+  .cta-card h2 { font-size: 26px; font-weight: 800; margin-bottom: 8px; letter-spacing: -0.4px; }
+  .cta-card p { color: var(--text2); font-size: 15px; margin-bottom: 24px; }
+  .cta-card .cta-agent {
+    display: inline-flex; align-items: center; gap: 10px;
+    padding: 8px 18px; border-radius: 100px;
+    background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.15);
+    margin-bottom: 28px;
+  }
+  .cta-card .cta-agent .agent-avatar {
+    width: 32px; height: 32px; border-radius: 50%;
+    background: var(--gradient);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: #fff;
+  }
+  .cta-card .cta-agent span { font-size: 14px; font-weight: 600; color: var(--text); }
+
+  /* ─── FOOTER ─── */
+  footer { border-top: 1px solid var(--border); padding: 32px 0; text-align: center; font-size: 13px; color: var(--text2); position: relative; z-index: 1; }
+
+  /* ─── WECHAT MODAL ─── */
+  .modal-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    background: rgba(0,0,0,0.7); backdrop-filter: blur(6px);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s;
+  }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal-card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 24px; padding: 40px 32px 32px;
+    text-align: center; max-width: 360px; width: 90%;
+    position: relative;
+  }
+  .modal-close {
+    position: absolute; top: 12px; right: 16px;
+    background: none; border: none; color: var(--text2);
+    font-size: 24px; cursor: pointer; line-height: 1;
+  }
+  .modal-close:hover { color: #fff; }
+  .modal-avatar {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: var(--gradient); margin: 0 auto 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; font-weight: 700; color: #fff;
+  }
+  .modal-card h3 { font-size: 20px; font-weight: 800; margin-bottom: 4px; }
+  .modal-wechat-box {
+    background: rgba(255,255,255,0.04); border: 1.5px dashed rgba(255,255,255,0.15);
+    border-radius: 12px; padding: 14px 20px; cursor: pointer;
+    display: flex; justify-content: space-between; align-items: center;
+    transition: all 0.2s; margin-bottom: 8px;
+  }
+  .modal-wechat-box:hover { border-color: var(--accent2); background: rgba(99,102,241,0.08); }
+  .modal-wechat-box span:first-child { font-size: 18px; font-weight: 700; color: #fff; letter-spacing: 1px; }
+  .copy-hint { font-size: 12px; color: var(--text2); }
+  .copy-success { display: none; color: var(--green); font-size: 13px; margin-top: 6px; }
+  .modal-qr {
+    margin-top: 16px; display: flex; justify-content: center;
+  }
+  .modal-qr svg { border-radius: 12px; border: 1px solid var(--border); }
+
+  /* ─── RESPONSIVE ─── */
+  @media (max-width: 768px) {
+    .container { padding: 0 16px; }
+
+    /* header */
+    header { padding: 40px 0 24px; }
+    h1 { font-size: 28px; }
+    .subtitle { font-size: 15px; }
+    .stats { gap: 16px; flex-wrap: wrap; }
+    .stat { min-width: 70px; }
+    .stat-val { font-size: 22px; }
+
+    /* section title */
+    .section-title { margin: 48px 0 28px; }
+    .section-title h2 { font-size: 24px; }
+
+    /* advantages */
+    .advantages { grid-template-columns: 1fr; gap: 10px; margin-bottom: 48px; }
+    .adv-card { padding: 20px 18px; }
+    .adv-card .icon { width: 38px; height: 38px; border-radius: 10px; margin-bottom: 10px; }
+    .adv-card .icon svg { width: 18px; height: 18px; }
+    .adv-card h3 { font-size: 15px; }
+    .adv-card p { font-size: 13px; }
+
+    /* products */
+    .products { gap: 14px; margin-bottom: 48px; }
+    .product { grid-template-columns: 1fr; gap: 20px; padding: 24px 18px; border-radius: 16px; }
+    .product.featured::before { border-radius: 16px 0 0 16px; width: 3px; }
+    .product-left h3 { font-size: 20px; }
+    .product-left .desc { font-size: 13px; margin-bottom: 16px; }
+    .product-specs { grid-template-columns: 1fr; gap: 6px; }
+    .product-specs .spec { padding: 8px 10px; }
+    .product-specs .spec svg { width: 14px; height: 14px; }
+    .product-specs .spec span { font-size: 12px; }
+    .product-right { padding: 20px 16px; border-radius: 12px; }
+    .product-right .pr-price { font-size: 36px; }
+    .product-right .pr-list li { font-size: 12px; padding: 6px 0; }
+
+    /* after-sales */
+    .after-sales { grid-template-columns: 1fr; gap: 10px; margin-bottom: 40px; }
+    .as-card { padding: 18px; }
+
+    /* faq */
+    .faq { margin-bottom: 48px; }
+    .faq-q { padding: 16px 18px; font-size: 14px; }
+    .faq-a { font-size: 13px; }
+
+    /* cta */
+    .cta-section { padding: 40px 0 50px; }
+    .cta-section h2 { font-size: 22px; }
+    .cta-card { padding: 32px 18px; border-radius: 20px; }
+    .cta-card h2 { font-size: 22px; }
+    .cta-card .cta-icon { width: 52px; height: 52px; border-radius: 14px; }
+    .cta-card .cta-icon svg { width: 24px; height: 24px; }
+
+    /* orbs smaller on mobile */
+    .orb-1 { width: 300px; height: 300px; top: -100px; right: -50px; }
+    .orb-2 { width: 200px; height: 200px; bottom: -50px; left: -50px; }
+  }
+
+  /* small screens */
+  @media (max-width: 380px) {
+    h1 { font-size: 24px; }
+    .product .btn { font-size: 13px; padding: 12px 20px; }
+    .product-right .pr-price { font-size: 30px; }
+  }
+
+  /* ─── SCROLL FADE ─── */
+  .fade-in {
+    opacity: 0; transform: translateY(30px);
+    transition: all 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ═══════════ HEADER ═══════════ -->
+<header>
+  <div class="container">
+    <div class="badge"><span class="dot"></span> 自有部署 · 真实住宅 IP</div>
+    <h1>专注<span class="highlight">一件事</span><br>更稳定的<span class="highlight">业务</span></h1>
+    <p class="subtitle">不仅仅是住宅 IP，更是一条安全、私密、可持续的网络通道。自有部署，真实本地住宅 IP，稳定、高速、可信赖。</p>
+    <div class="stats">
+      <div class="stat"><div class="stat-val">≥99.9%</div><div class="stat-label">SLA 可用性</div></div>
+      <div class="stat"><div class="stat-val">&lt;30ms</div><div class="stat-label">全网延迟</div></div>
+      <div class="stat"><div class="stat-val">1Gbps</div><div class="stat-label">带宽入口</div></div>
+      <div class="stat"><div class="stat-val">7×24</div><div class="stat-label">在线支持</div></div>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════ ADVANTAGES ═══════════ -->
+<div class="container">
+  <div class="section-title fade-in">
+    <h2>核心优势</h2>
+    <p>五个维度构建安全私密网络</p>
+  </div>
+  <div class="advantages">
+    <div class="adv-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></div>
+      <h3>真实住宅 IP</h3>
+      <p>非 Hosting / 机房 IP，真实宽带拨号段，风控识别率低。</p>
+    </div>
+    <div class="adv-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/><circle cx="6.5" cy="6.5" r="1" fill="var(--accent3)"/><circle cx="17.5" cy="6.5" r="1" fill="var(--accent3)"/><circle cx="6.5" cy="17.5" r="1" fill="var(--accent3)"/><circle cx="17.5" cy="17.5" r="1" fill="var(--accent3)"/></svg></div>
+      <h3>自有部署</h3>
+      <p>非代理商、非中转。设备自持、链路自建，可控可维护。</p>
+    </div>
+    <div class="adv-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 00-8-8z"/></svg></div>
+      <h3>本地出口</h3>
+      <p>目标地区本地 IP 直接出站，降低平台风控，提升账号安全性。</p>
+    </div>
+    <div class="adv-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/><path d="M8 12l3 3 5-5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+      <h3>SLA ≥ 99.9%</h3>
+      <p>多重冗余架构，持续稳定在线，业务永不打烊。</p>
+    </div>
+    <div class="adv-card fade-in">
+      <div class="icon"><svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10"/></svg></div>
+      <h3>私有转发协议</h3>
+      <p>非公开脚本，节点故障自动切换，直播推流不掉线。</p>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ PRODUCTS ═══════════ -->
+<div class="container">
+  <div class="section-title fade-in">
+    <h2>产品与套餐</h2>
+    <p>按需选择，灵活搭配</p>
+  </div>
+
+  <div class="products">
+
+    <!-- 运营套餐 -->
+    <div class="product fade-in">
+      <div class="product-left">
+        <div class="product-badge standard"><span class="badge-dot"></span> 共享入口</div>
+        <h3>运营套餐</h3>
+        <p class="desc">适用于中视频、账号运营、带货、养号、社媒、AI 等日常场景。</p>
+        <div class="product-specs">
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>带宽 <strong>1 Gbps</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><path d="M12 2l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5L12 2z"/></svg><span>入口 <strong>三网共享 G 口</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="8 12 11 15 16 9"/></svg><span>流量 <strong>300 GB / 月</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span>线路 <strong>电信 · 联通 · 移动</strong></span></div>
+        </div>
+      </div>
+      <div class="product-right">
+        <div class="pr-label">起步价</div>
+        <div class="pr-price" id="price-yunying">¥159<span>/月</span></div>
+        <div class="pr-note">限时优惠 · 季付 ¥450 · 年付 ¥1488</div>
+        <ul class="pr-list">
+          <li><span>1 个月</span><span>¥159</span></li>
+          <li><span>3 个月</span><span>¥450 <span style="font-size:11px;color:var(--green);">省 ¥27</span></span></li>
+          <li><span>6 个月</span><span>¥816 <span style="font-size:11px;color:var(--green);">省 ¥138</span></span></li>
+          <li><span>12 个月</span><span>¥1488 <span style="font-size:11px;color:var(--green);">省 ¥420</span></span></li>
+        </ul>
+        <a href="#" class="btn btn-primary">立即开通</a>
+      </div>
+    </div>
+
+    <!-- 直播套餐 -->
+    <div class="product featured fade-in">
+      <div class="product-left">
+        <div class="product-badge pro"><span class="badge-dot"></span> 专线独享</div>
+        <h3>直播套餐</h3>
+        <p class="desc">专为直播推流深度优化，0 丢包。解决账号异常、黄标限流、卡顿、无自然流量等问题。</p>
+        <div class="product-specs">
+          <div class="spec"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg><span>入口 <strong>三网 BGP 独享</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2h7.6l-6 4.8 2.4 7.2-6.4-4.8-6.4 4.8 2.4-7.2-6-4.8h7.6z"/></svg><span>中继 <strong>500M ~ 1.5Gbps</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 00-8 8c0 5.4 8 12 8 12s8-6.6 8-12a8 8 0 00-8-8z"/></svg><span>落地 <strong>100M ~ 1Gbps</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>延迟 <strong>&lt; 30ms 全网</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg><span>线路 <strong>无 QSP · 独立纯净 IP</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><polyline points="6 9 12 15 18 9"/></svg><span>赠送 <strong>100GB 上行流量</strong></span></div>
+        </div>
+      </div>
+      <div class="product-right">
+        <div class="pr-label">起步价</div>
+        <div class="pr-price">¥800<span>/月</span></div>
+        <div class="pr-note">地区不同价格不同</div>
+        <ul class="pr-list">
+          <li><span>入口</span><span>三网 BGP</span></li>
+          <li><span>中继</span><span>500M ~ 1.5G</span></li>
+          <li><span>落地</span><span>100M ~ 1G</span></li>
+          <li><span>超出流量</span><span>¥0.8 / GB</span></li>
+        </ul>
+        <a href="#" class="btn btn-primary">定制方案</a>
+      </div>
+    </div>
+
+    <!-- X86 软路由 -->
+    <div class="product fade-in">
+      <div class="product-left">
+        <div class="product-badge hardware"><span class="badge-dot"></span> 硬件设备</div>
+        <h3>X86 软路由</h3>
+        <p class="desc">工作室、团队多账号运营首选。支持多台 AP 有线中继，每台 AP 绑定独立出口 IP，各走各的线路。</p>
+        <div class="product-specs">
+          <div class="spec"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span>架构 <strong>Intel N100 · 4×2.5G</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>系统 <strong>iStoreOS / OpenWrt</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>多 AP <strong>有线中继 · 独立出口</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg><span>质保 <strong>1 年 + 90 天调试</strong></span></div>
+        </div>
+      </div>
+      <div class="product-right">
+        <div class="pr-label">起步价</div>
+        <div class="pr-price">¥800<span>起</span></div>
+        <div class="pr-note">全国顺丰包邮</div>
+        <ul class="pr-list">
+          <li><span>CPU</span><span>Intel N100</span></li>
+          <li><span>网口</span><span>4× 2.5G i226-V</span></li>
+          <li><span>内存</span><span>8GB DDR5</span></li>
+          <li><span>存储</span><span>128GB NVMe</span></li>
+          <li><span>使用</span><span>无月租 · 永久</span></li>
+          <li><span>说明</span><span>IP · AP 需另购</span></li>
+        </ul>
+        <a href="#" class="btn btn-primary">了解更多</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ═══════════ AFTER-SALES ═══════════ -->
+<div class="container">
+  <div class="section-title fade-in">
+    <h2>售后与支持</h2>
+    <p>注重长期合作，用结果说话</p>
+  </div>
+  <div class="after-sales">
+    <div class="as-card fade-in">
+      <div class="num"><svg viewBox="0 0 24 24" width="22" height="22" stroke="var(--accent3)" fill="none" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> 24/7</div>
+      <div class="title">全天候客服</div>
+      <div class="desc">7×24 小时在线，随时响应。</div>
+    </div>
+    <div class="as-card fade-in">
+      <div class="num"><svg viewBox="0 0 24 24" width="22" height="22" stroke="var(--accent3)" fill="none" stroke-width="1.8"><circle cx="9" cy="7" r="3"/><circle cx="15" cy="7" r="3"/><path d="M3 21v-2a4 4 0 014-4h2M21 21v-2a4 4 0 00-4-4h-2"/></svg> 1v1</div>
+      <div class="title">专属售后群</div>
+      <div class="desc">问题实时沟通，不踢皮球。</div>
+    </div>
+    <div class="as-card fade-in">
+      <div class="num"><svg viewBox="0 0 24 24" width="22" height="22" stroke="var(--accent3)" fill="none" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26"/></svg></div>
+      <div class="title">加急处理</div>
+      <div class="desc">紧急问题周末也可加急。</div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ FAQ ═══════════ -->
+<div class="container">
+  <div class="section-title fade-in">
+    <h2>快速问答</h2>
+  </div>
+  <div class="faq">
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFAQ(this)">Q：支持退款吗？<span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p><strong>运营套餐</strong>：交付后不支持无理由退款。若因我方质量问题或服务故障导致无法使用，按故障时长补偿或延期。</p>
+        <p style="margin-top:8px"><strong>直播线路</strong>：因我方原因导致服务不可用，按约定补偿或调度切换，保障直播不中断。</p>
+        <p style="margin-top:8px"><strong>X86 软路由</strong>：定制设备，非质量问题不支持退换。发货前支持视频验货，确保到手即用。</p>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFAQ(this)">Q：如何验证 IP 归属和 ASN？<span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>推荐工具：</p>
+        <p>
+          <span class="tag">ipinfo.io</span>
+          <span class="tag">ip-api.com</span>
+          <span class="tag">bgp.he.net</span>
+          <span class="tag">ARIN / RIPE WHOIS</span>
+        </p>
+        <p style="margin-top:8px">可查询 ASN、运营商、归属地等完整路由信息。</p>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFAQ(this)">Q：支持免费测试吗？<span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>目前暂不提供个人免费测试。企业或长期合作客户可联系在线客服申请测试。<br>（此举为避免 IP 资源被恶意爬取和滥用，感谢理解。）</p>
+      </div>
+    </div>
+    <div class="faq-item fade-in">
+      <div class="faq-q" onclick="toggleFAQ(this)">Q：为什么 IP 归属地查询和实际不同？<span class="arrow">▼</span></div>
+      <div class="faq-a">
+        <p>IP 数据库更新时间与归属口径不同，可能显示为运营商其他地区或通用标记，并不代表物理位置发生变化。</p>
+        <p style="margin-top:8px">建议使用 <span class="tag">ipinfo.io</span> <span class="tag">bgp.he.net</span> 查询，数据更权威。</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ CTA ═══════════ -->
+<div class="container">
+  <div class="cta-section fade-in">
+    <div class="cta-card">
+      <div class="cta-icon"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg></div>
+      <h2>准备好开始了吗？</h2>
+      <p>选择适合你的方案，让业务更稳定</p>
+      <div class="cta-agent">
+        <div class="agent-avatar">嫚</div>
+        <span>专属顾问 · A.嫚儿</span>
+      </div>
+      <br>
+      <a href="#" class="btn btn-primary btn-lg">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></svg>
+        立即咨询
+      </a>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="container">注重长期合作 · 用结果说话 · 用生意交朋友</div>
+</footer>
+
+<!-- ═══════════ WECHAT MODAL ═══════════ -->
+<div class="modal-overlay" id="wechatModal" onclick="closeWechat(event)">
+  <div class="modal-card" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeWechat()">&times;</button>
+    <div class="modal-avatar">嫚</div>
+    <h3>添加微信咨询</h3>
+    <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">专属顾问 · A.嫚儿</p>
+    <div class="modal-wechat-box" id="wechatIdBox" onclick="copyWechat()">
+      <span id="wechatId">wechat_id_here</span>
+      <span class="copy-hint">点击复制</span>
+    </div>
+    <p class="copy-success" id="copySuccess">✅ 已复制，去微信粘贴搜索添加</p>
+    <p style="font-size:12px;color:var(--text2);margin-top:16px;">或截图保存下方二维码，微信扫码添加</p>
+    <div class="modal-qr">
+      <svg viewBox="0 0 160 160" width="160" height="160">
+        <!-- 占位二维码，替换为你的实际二维码图片 -->
+        <rect width="160" height="160" fill="var(--surface)"/>
+        <text x="80" y="70" text-anchor="middle" fill="var(--text2)" font-size="12">二维码</text>
+        <text x="80" y="90" text-anchor="middle" fill="var(--text2)" font-size="11">替换为你的</text>
+        <text x="80" y="108" text-anchor="middle" fill="var(--text2)" font-size="11">微信二维码图片</text>
+      </svg>
+    </div>
+  </div>
+</div>
+
+<script>
+  // FAQ toggle
+  function toggleFAQ(el) {
+    const item = el.parentElement;
+    item.classList.toggle('open');
+  }
+
+  // WeChat modal
+  const WECHAT_ID = 'A_maner'; // ← 改成你的微信号
+  
+  document.getElementById('wechatId').textContent = WECHAT_ID;
+  document.querySelectorAll('.btn-primary').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+      e.preventDefault();
+      showWechat();
+    });
+  });
+
+  function showWechat() {
+    document.getElementById('wechatModal').classList.add('show');
+    document.body.style.overflow = 'hidden';
+    document.getElementById('copySuccess').style.display = 'none';
+  }
+
+  function closeWechat(e) {
+    if (e && e.target !== document.getElementById('wechatModal')) return;
+    document.getElementById('wechatModal').classList.remove('show');
+    document.body.style.overflow = '';
+  }
+
+  async function copyWechat() {
+    try {
+      await navigator.clipboard.writeText(WECHAT_ID);
+      document.getElementById('copySuccess').style.display = 'block';
+    } catch {
+      const el = document.getElementById('wechatId');
+      const range = document.createRange();
+      range.selectNode(el);
+      window.getSelection().removeAllRanges();
+      window.getSelection().addRange(range);
+      document.execCommand('copy');
+      document.getElementById('copySuccess').style.display = 'block';
+    }
+  }
+
+  // Click outside modal to close
+  document.getElementById('wechatModal').addEventListener('click', function(e) {
+    if (e.target === this) closeWechat();
+  });
+
+  // Scroll fade-in
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
