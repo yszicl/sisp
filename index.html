@@ -576,8 +576,8 @@
         <h3>X86 软路由</h3>
         <p class="desc">工作室、团队多账号运营首选。支持多台 AP 有线中继，每台 AP 绑定独立出口 IP，各走各的线路。</p>
         <div class="product-specs">
-          <div class="spec"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span>架构 <strong>Intel N100 · 4×2.5G</strong></span></div>
-          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>系统 <strong>iStoreOS / OpenWrt</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/></svg><span>架构 <strong>X86_64</strong></span></div>
+          <div class="spec"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>系统 <strong>定制版OS</strong></span></div>
           <div class="spec"><svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg><span>多 AP <strong>有线中继 · 独立出口</strong></span></div>
           <div class="spec"><svg viewBox="0 0 24 24"><path d="M12 2L4 5v6.09c0 5.05 3.41 9.76 8 10.91 4.59-1.15 8-5.86 8-10.91V5l-8-3z"/></svg><span>质保 <strong>1 年 + 90 天调试</strong></span></div>
         </div>
@@ -587,10 +587,10 @@
         <div class="pr-price">¥800<span>起</span></div>
         <div class="pr-note">全国顺丰包邮</div>
         <ul class="pr-list">
-          <li><span>CPU</span><span>Intel N100</span></li>
-          <li><span>网口</span><span>4× 2.5G i226-V</span></li>
+          <li><span>CPU</span><span>Intel</span></li>
+          <li><span>网口</span><span>2× 1Gbps</span></li>
           <li><span>内存</span><span>8GB DDR5</span></li>
-          <li><span>存储</span><span>128GB NVMe</span></li>
+          <li><span>存储</span><span>64GB NVMe</span></li>
           <li><span>使用</span><span>无月租 · 永久</span></li>
           <li><span>说明</span><span>IP · AP 需另购</span></li>
         </ul>
@@ -701,7 +701,7 @@
     <h3>添加微信咨询</h3>
     <p style="color:var(--text2);font-size:14px;margin-bottom:16px;">专属顾问 · A.嫚儿</p>
     <div class="modal-wechat-box" id="wechatIdBox" onclick="copyWechat()">
-      <span id="wechatId">wechat_id_here</span>
+      <span id="wechatId">mm_isp</span>
       <span class="copy-hint">点击复制</span>
     </div>
     <p class="copy-success" id="copySuccess">✅ 已复制，去微信粘贴搜索添加</p>
@@ -720,7 +720,7 @@
   }
 
   // WeChat modal
-  const WECHAT_ID = 'A_maner'; // ← 改成你的微信号
+  const WECHAT_ID = 'mm_isp'; // ← 改成你的微信号
   
   document.getElementById('wechatId').textContent = WECHAT_ID;
   document.querySelectorAll('.btn-primary').forEach(btn => {
